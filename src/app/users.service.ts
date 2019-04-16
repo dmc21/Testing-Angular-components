@@ -12,10 +12,25 @@ export class UsersService {
   url = 'http://localhost:3000/users';
 
   getAll(): Promise<any> {
-    return this.http.get(this.url).toPromise();
+    return new Promise<any>((resolve, reject) => {
+      this.http.get(this.url).toPromise().then(data => {
+        resolve(data);
+      }, err => {
+        reject(err);
+      });
+    });
+
   }
 
   saveData(user): Promise<any> {
-    return this.http.post(this.url, user).toPromise();
+
+    return new Promise<any>((resolve, reject) => {
+      this.http.post(this.url, user).toPromise().then(data => {
+        resolve(data);
+      }, err => {
+        reject(err);
+      });
+    });
+
   }
 }

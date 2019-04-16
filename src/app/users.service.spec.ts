@@ -1,37 +1,65 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, fakeAsync } from '@angular/core/testing';
 
 import { UsersService } from './users.service';
 import { HttpClientModule } from '@angular/common/http';
+import { of } from 'rxjs';
 
 describe('UsersService', () => {
-  beforeEach(() => TestBed.configureTestingModule({
-    imports: [HttpClientModule]
-  }));
+
+  let usersService: UsersService;
+
+
+  beforeEach(() => { TestBed.configureTestingModule({
+    imports: [HttpClientModule],
+    providers: [UsersService]
+  });
+  usersService = TestBed.get(UsersService); // Add this
+});
+
 
   it('should be created', () => {
-    const service: UsersService = TestBed.get(UsersService);
-    expect(service).toBeTruthy();
+    expect(usersService).toBeTruthy();
   });
 
-  it('get-All (SERVICE)',  (done: DoneFn) => {
-    const service: UsersService = TestBed.get(UsersService);
-    service.getAll().then(value => {
-      expect(value[0].nombre).toBe('json-server');
-      done();
+  it('getAll (SERVICE)',  () => {
+    const userResponse = [
+      {
+        id: '1',
+        nombre: 'Jane',
+        apellidos: 'Designer',
+        localidad: 'Blastoise'
+      },
+      {
+        id: '2',
+        nombre: 'Bob',
+        apellidos: 'Developer',
+        localidad: 'Charizard'
+      }
+    ];
+
+    spyOn(usersService, 'getAll').and.callFake( function() {
+      return Promise.resolve(userResponse);
+    });
+
+    usersService.getAll().then(value => {
+      expect(value).toEqual(userResponse);
     });
 });
 
-  it('saveData (SERVICE)',  (done: DoneFn) => {
+  it('saveData (SERVICE)',  () => {
+
     const user = {
       nombre: 'Antonio',
       apellidos: 'Mora',
       localidad: 'Almería'
     };
 
-    const service: UsersService = TestBed.get(UsersService);
-    service.saveData(user).then(value => {
-      expect(value.nombre).toBe('Antonio');
-      done();
+    spyOn(usersService, 'saveData').and.callFake( function() {
+      return Promise.resolve(true);
+    });
+
+    usersService.saveData(user).then(value => {
+      expect(value).toBe(true);
     });
   });
 });

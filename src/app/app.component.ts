@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UsersService } from './users.service';
-import { NgForm, FormBuilder, Validators, FormGroup } from '@angular/forms';
+import {Validators, FormGroup, FormControl } from '@angular/forms';
 import { User } from './user';
 
 
@@ -15,25 +15,29 @@ export class AppComponent implements OnInit {
 
   userData = new Array<any>();
   user = new User();
-  userForm: FormGroup;
 
-  constructor (private service: UsersService, private formBuilder: FormBuilder) {}
+  userForm = new FormGroup({
+    id: new FormControl(null),
+    nombre: new FormControl('', [Validators.required]),
+    apellidos: new FormControl('', [Validators.required]),
+    localidad: new FormControl('', [Validators.required])
+ });
 
-  ngOnInit() {
-    this.service.getAll().then(data => {
+  constructor (private service: UsersService) {}
+
+  async ngOnInit() {
+    await this.getAll();
+  }
+
+  getAll() {
+    return this.service.getAll().then(data => {
       this.userData = data;
-    });
-
-    this.userForm = this.formBuilder.group({
-      'id': [null],
-      'nombre': ['', [Validators.required]],
-      'apellidos': ['', [Validators.required]],
-      'localidad': ['', [Validators.required]]
     });
   }
 
 
   newUser() {
+    console.log(this.userForm.valid);
     if (this.userForm.valid && this.userForm.get('id').value == null) {
       this.service.saveData(this.userForm.value).then(data => {
         this.userData.push(this.userForm.value);

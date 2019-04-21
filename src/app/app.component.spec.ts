@@ -3,11 +3,8 @@ import { AppComponent } from './app.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { UsersService } from './users.service';
-import { User } from './user';
 import { HttpClientTestingModule,
  } from '@angular/common/http/testing';
-import { By } from '@angular/platform-browser';
-import { tick } from '@angular/core/src/render3';
 
 
 describe('AppComponent', () => {
@@ -28,21 +25,21 @@ describe('AppComponent', () => {
 
      // get test component from the fixture
      component = fixture.componentInstance;
-     component.ngOnInit();
+    component.ngOnInit();
   }));
 
 
   it('should create the app', async(() => {
-    expect(AppComponent).toBeTruthy();
+    expect(component).toBeTruthy();
   }));
 
-  it('invalid-form', () => {
+  it('invalid-form', async(() => {
     expect(component.userForm.valid).toBe(false);
     component.userForm.controls['nombre'].setValue('david');
     component.userForm.controls['apellidos'].setValue('mora');
     component.userForm.controls['localidad'].setValue('');
     expect(component.userForm.valid).toBe(false);
-  });
+  }));
 
   it('valid-form', () => {
 

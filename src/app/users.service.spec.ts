@@ -2,7 +2,6 @@ import { TestBed, fakeAsync } from '@angular/core/testing';
 
 import { UsersService } from './users.service';
 import { HttpClientModule } from '@angular/common/http';
-import { of } from 'rxjs';
 
 describe('UsersService', () => {
 

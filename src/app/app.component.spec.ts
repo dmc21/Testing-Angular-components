@@ -1,22 +1,24 @@
-import { TestBed, async, fakeAsync, ComponentFixture } from '@angular/core/testing';
+import { TestBed, async, fakeAsync, ComponentFixture, flushMicrotasks, flush, inject } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { UsersService } from './users.service';
 import { HttpClientTestingModule,
  } from '@angular/common/http/testing';
+import { HttpClientModule } from '@angular/common/http';
 
 
 describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
+  let service: UsersService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
         AppComponent
       ],
-      imports: [FormsModule, HttpClientTestingModule, ReactiveFormsModule],
+      imports: [FormsModule, HttpClientTestingModule, ReactiveFormsModule, HttpClientModule],
       providers: [UsersService]
     }).compileComponents();
 
@@ -25,9 +27,10 @@ describe('AppComponent', () => {
 
      // get test component from the fixture
      component = fixture.componentInstance;
+
+     service = TestBed.get(UsersService);
     component.ngOnInit();
   }));
-
 
   it('should create the app', async(() => {
     expect(component).toBeTruthy();
@@ -55,4 +58,16 @@ describe('AppComponent', () => {
     expect(component.userForm.valid).toBe(false);
   });
 
+  it('getAll method', async(() => {
+
+    fixture.detectChanges();
+
+    spyOn(service, 'getAll').and.returnValue(Promise.resolve());
+
+    component.getAll();
+
+    fixture.whenStable().then(() => {
+        expect(component.is).toBe(true);
+    });
+  }));
 });

@@ -15,6 +15,7 @@ export class AppComponent implements OnInit {
 
   userData = new Array<any>();
   user = new User();
+  is: Boolean;
 
   userForm = new FormGroup({
     id: new FormControl(null),
@@ -26,15 +27,15 @@ export class AppComponent implements OnInit {
   constructor (private service: UsersService) {}
 
   async ngOnInit() {
-    await this.getAll();
+   await this.getAll();
   }
 
-  getAll() {
-    return this.service.getAll().then(data => {
+async getAll() {
+    await this.service.getAll().then(data => {
+      this.is = true;
       this.userData = data;
-    });
-  }
-
+     });
+    }
 
   newUser() {
     console.log(this.userForm.valid);
